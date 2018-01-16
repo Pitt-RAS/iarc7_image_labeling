@@ -1,1 +1,1 @@
-This folder is where you should keep your images you want to label
+This folder is where images that have been labelled are stored
