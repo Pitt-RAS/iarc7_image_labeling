@@ -1,1 +1,0 @@
-Enter the images of your dataset into this folder
