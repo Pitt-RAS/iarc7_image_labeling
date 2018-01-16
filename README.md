@@ -12,6 +12,13 @@ There are no requirements on the client computer other than accessing the webpag
 3. Make any necessary changes in the tool.py script
 4. Run tool.py
 
+Once all images are labelled, you should see the following:
+1. static/dataset should now have all labelled images and the corresponding label text files
+2. static/labels should now have all the label text files
+3. static/dist should now have all the labelled images
+4. static/raw should have no images
+5. static/processing should have no images. If images are in this folder copy them to static/raw and run tool.py to label the remaining images
+
 ### tool.py
 This script is the script used at the time of labeling to create the server. 
 To change the server location edit the host parameter in the run function in the main. for local operation use "host=localhost"
