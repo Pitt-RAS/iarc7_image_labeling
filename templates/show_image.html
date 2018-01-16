@@ -1,0 +1,156 @@
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script language="javascript">
+    var rects =[];
+    var current_rect = [];
+    var filename='';
+    
+    function clearSelections(){
+        var can = document.getElementById('canvas');
+        
+        var ctx = can.getContext('2d');        
+        ctx.clearRect (0, 0, can.width, can.height);
+        rects.forEach(function(rect){
+            ctx.clearRect (rect.start_x, rect.start_y, can.width, can.height);
+            console.log(rect);
+        });
+        current_rect = [];
+        rects = [];
+        console.log(rects);
+    };
+
+    function saveSelections(){
+        str_data = JSON.stringify({'rects':rects, 'filename':filename});
+        $.post('/saveSelections/'+str_data, function(data){
+            location.reload();
+        });
+    }
+	
+	function keyPressed(event){
+		event = event ||window.event;
+		var presskey = event.which || event.keyCode; 
+		console.log(presskey)
+		if (presskey == 32){ //Spacebar
+			saveSelections();
+		}
+		else if(presskey == 99){ //lowercase c
+			clearSelections();
+		}
+	}	
+
+    $(document).ready(function(){
+    
+    var can = document.getElementById('canvas');
+    var ctx = can.getContext('2d');
+    var startX, startY;
+    var up = false;
+
+
+    $.get('/fetchimage', function(data){
+        data = JSON.parse(data);
+        console.log(typeof(data));
+        image = "url('data:image/jpeg;base64," + data.image + "')"
+        $('canvas').css('background-image', image);
+        filename = data.filename;
+    });
+
+    $("canvas").mousedown(function(event){
+        startX = event.pageX;
+        startY= event.pageY;
+        up = false;
+        $(this).bind('mousemove', function(e){
+            drawLine(startX, startY, e.pageX, e.pageY);
+        });
+    }).mouseup(function(){
+        up = true;
+        $(this).unbind('mousemove');
+        var data = {
+            "start_x": startX,
+            "start_y": startY,
+            "stop_x": event.pageX,
+            "stop_y": event.pageY
+        }
+        if (data.start_x != data.stop_x && data.start_y != data.stop_y){
+            current_rect.push([startX, startY, event.pageX, event.pageY])
+            rects.push(data);
+            console.log(rects);
+        }
+        
+    });
+             
+    /*function clearSelections(){
+        console.log('clear called!')
+        ctx.clearRect (0, 0, can.width, can.height);  
+    }*/
+
+    function drawLine(x, y, stopX, stopY){
+
+        ctx.clearRect (x, y, stopX, stopY);
+        ctx.clearRect (0, 0, can.width, can.height);
+
+        // alert("len "+rects.length);
+        //alert(rects.length);
+        for (i = 0; i < current_rect.length; i++) {
+            //alert(i)
+            stax = current_rect[i][0];
+            stay = current_rect[i][1];
+            stpx = current_rect[i][2];
+            stpy = current_rect[i][3];
+            ctx.beginPath();
+
+            ctx.moveTo(stax, stay);
+            ctx.lineTo(stpx, stay);
+
+            ctx.moveTo(stax, stay);
+            ctx.lineTo(stax, stpy);
+
+            ctx.moveTo(stax, stpy);
+            ctx.lineTo(stpx, stpy);
+
+            ctx.moveTo(stpx, stay);
+            ctx.lineTo(stpx, stpy);
+            
+            ctx.closePath();
+            ctx.stroke();
+        }
+
+        ctx.beginPath();
+
+        ctx.moveTo(x, y);
+        ctx.lineTo(stopX, y);
+
+        ctx.moveTo(x, y);
+        ctx.lineTo(x, stopY);
+
+        ctx.moveTo(x, stopY);
+        ctx.lineTo(stopX, stopY);
+
+        ctx.moveTo(stopX, y);
+        ctx.lineTo(stopX, stopY);
+
+        ctx.closePath();
+        ctx.stroke();
+        
+    }
+    });
+</script>
+
+<style>
+canvas{
+    background-position: center;
+    background-size: 100% 100%;
+}
+</style>
+</head>
+<body style="margin:0px" onkeypress = "keyPressed()">
+<canvas id="canvas" width="960" height="540">
+    Your browser doesn't support canvas
+</canvas>
+
+
+
+<a onclick="saveSelections()">Save</a>
+<a onclick="clearSelections()">Clear</a>
+</body>
+</html>
