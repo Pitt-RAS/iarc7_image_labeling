@@ -1,0 +1,1 @@
+This is where your images and their label text file will be written after they have been labelled
