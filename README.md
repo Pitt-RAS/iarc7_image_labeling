@@ -7,8 +7,8 @@ This tool utilizes Bottle to create a server which client computers can access a
 There are no requirements on the client computer other than accessing the webpage. It is HIGHLY recommended that the client computer uses the CHROME browser. To label an image simply click on one corner of the bounding box you would like to draw and then click on the diagonal corner. You may start with whichever corner you prefer. Once all bounding boxes have been drawn click next or press the spacebar. If you wish to clear all selections, press 'c'.
 
 ### Info for Server Computer to use
-1. Create your dataset using the make_dataset.py script
-2. Verify all images are in the static/raw directory
+1. Create your dataset using the make_dataset.py script. `make_dataset.py` should be run from a directory containing directories of your images and a directory called `dataset` which will contain the generated dataset
+2. Copy contents of `dataset` to the static/raw directory
 3. Make any necessary changes in the tool.py script
 4. Run tool.py
 
