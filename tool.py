@@ -59,11 +59,17 @@ def save(data):
                 topy = rect['start_y']
                 bottomy = rect['stop_y']
             print( leftx, topy, rightx, bottomy)
-            f.write("{} {} {} {} roomba\n".format(mul(leftx), mul(topy), \
-                                           mul(rightx), mul(bottomy)))
+            f.write("{} {} {} {} {}\n".format(mul(leftx), mul(topy), \
+                                           mul(rightx), mul(bottomy), rect['class']))
     shutil.move('static/processing/' + filename, 'static/dist/' + filename)
     return ''
 
+@app.route('/delete/<data>', method='POST')
+def delete(data):
+    data = json.loads(data)
+    filename = data['filename']
+    shutil.move('static/processing/' + filename, 'static/deleted/' + filename)
+    return ''
 
 if __name__ == '__main__':
     run(app, host='localhost', port=8080)
