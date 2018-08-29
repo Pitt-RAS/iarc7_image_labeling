@@ -1,7 +1,9 @@
 # iarc7_image_labeling
 Tool for Group Labeling Images
 
-This tool utilizes Bottle to create a server which client computers can access and label images. 
+This tool utilizes Bottle to create a server which client computers can access and label images.
+
+This repository is part of the Pitt RAS effort for IARC Mission 7.  For an overview of the IARC competition as well as the team's efforts and technical approaches, check out our [team website](http://pittras.org/projects/IARC/), and in particular the [technical postmortem post for the project](http://pittras.org/projects/iarc/2018/08/10/update-iarc-technical-postmortem.html).
 
 ### Info For Client Computers
 There are no requirements on the client computer other than accessing the webpage. It is HIGHLY recommended that the client computer uses the CHROME browser. To label an image simply click on one corner of the bounding box you would like to draw and then click on the diagonal corner. You may start with whichever corner you prefer. Once all bounding boxes have been drawn click next or press the spacebar. If you wish to clear all selections, press 'c'.
