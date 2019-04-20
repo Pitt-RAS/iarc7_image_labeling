@@ -25,18 +25,35 @@
         $.post('/saveSelections/'+str_data, function(data){
             location.reload();
         });
-    }
+    };
+
+    function deleteImage() {
+        str_data = JSON.stringify({'filename': filename});
+        $.post('/delete/' + str_data, function(data){
+            location.reload();
+        });
+    };
 	
 	function keyPressed(event){
 		event = event ||window.event;
 		var presskey = event.which || event.keyCode; 
-		console.log(presskey)
+        console.log(presskey);
 		if (presskey == 32){ //Spacebar
 			saveSelections();
 		}
 		else if(presskey == 99){ //lowercase c
 			clearSelections();
 		}
+        else if (presskey == 100 || presskey == 68) { // lowercase d
+            console.log('deleting');
+            deleteImage();
+        }
+        else if (presskey == 49) {
+            $('#class').text('roomba');
+        }
+        else if (presskey == 50) {
+            $('#class').text('obstacle');
+        }
 	}	
 
     $(document).ready(function(){
@@ -69,7 +86,8 @@
             "start_x": startX,
             "start_y": startY,
             "stop_x": event.pageX,
-            "stop_y": event.pageY
+            "stop_y": event.pageY,
+            "class": $('#class').text()
         }
         if (data.start_x != data.stop_x && data.start_y != data.stop_y){
             current_rect.push([startX, startY, event.pageX, event.pageY])
@@ -88,11 +106,16 @@
 
         ctx.clearRect (x, y, stopX, stopY);
         ctx.clearRect (0, 0, can.width, can.height);
-
         // alert("len "+rects.length);
         //alert(rects.length);
         for (i = 0; i < current_rect.length; i++) {
             //alert(i)
+            if (rects[i]['class'] == 'roomba') {
+                ctx.strokeStyle = '#ff0000';
+            } else {
+                ctx.strokeStyle = '#000000';
+            }
+
             stax = current_rect[i][0];
             stay = current_rect[i][1];
             stpx = current_rect[i][2];
@@ -113,6 +136,12 @@
             
             ctx.closePath();
             ctx.stroke();
+        }
+
+        if ($('#class').text() == 'roomba') {
+            ctx.strokeStyle = '#ff0000';
+        } else {
+            ctx.strokeStyle = '#000000';
         }
 
         ctx.beginPath();
@@ -152,5 +181,6 @@ canvas{
 
 <a onclick="saveSelections()">Save</a>
 <a onclick="clearSelections()">Clear</a>
+<p id="class">roomba</p>
 </body>
 </html>
